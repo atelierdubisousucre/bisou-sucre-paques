@@ -1,0 +1,62 @@
+{
+  "expo": {
+    "name": "Joyeuses Pâques - Bisou Sucré",
+    "slug": "Paques",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/logo_rond.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/logo_rond.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FFF0F5"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.bisousucre.paques",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Nous avons besoin de votre caméra pour prendre des photos de Pâques avec notre cadre festif.",
+        "NSPhotoLibraryAddUsageDescription": "Nous sauvegardons vos photos de Pâques dans votre galerie.",
+        "NSPhotoLibraryUsageDescription": "Nous accédons à votre galerie pour sauvegarder vos photos de Pâques."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/logo_rond.png",
+        "backgroundColor": "#FFF0F5"
+      },
+      "package": "com.bisousucre.paques",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/logo_rond.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Autorisez la caméra pour prendre vos photos de Pâques 📸"
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Autorisez l'accès à votre galerie pour sauvegarder vos photos.",
+          "savePhotosPermission": "Autorisez la sauvegarde de photos dans votre galerie.",
+          "isAccessMediaLocationEnabled": true
+        }
+      ],
+      "expo-sharing",
+      "expo-asset"
+    ]
+  }
+}

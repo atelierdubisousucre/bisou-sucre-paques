@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Joyeuses Pâques - Bisou Sucré",
-    "slug": "Paques",
+    "slug": "bisou-sucre-paques",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo_rond.png",
@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#FFF0F5"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.bisousucre.paques",
@@ -54,9 +52,7 @@
           "savePhotosPermission": "Autorisez la sauvegarde de photos dans votre galerie.",
           "isAccessMediaLocationEnabled": true
         }
-      ],
-      "expo-sharing",
-      "expo-asset"
+      ]
     ]
   }
 }

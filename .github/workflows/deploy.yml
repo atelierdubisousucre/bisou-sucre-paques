@@ -21,17 +21,19 @@ jobs:
       - name: 📥 Checkout
         uses: actions/checkout@v4
 
-      - name: 📦 Setup Node.js
+      - name: 📦 Setup Node.js 20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: 🔧 Install dependencies
         run: npm install --legacy-peer-deps
 
-      - name: 🌐 Export web build
+      - name: 🌐 Export web build avec baseUrl GitHub Pages
         run: npx expo export --platform web
+        env:
+          NODE_ENV: production
+          EXPO_PUBLIC_BASE_URL: /bisou-sucre-paques
 
       - name: 📤 Upload artifact
         uses: actions/upload-pages-artifact@v3

@@ -1,5 +1,8 @@
 # 🚀 Guide GitHub Pages — Étape par étape
 
+# Note de réinitialisation. Supprimer le dossier .git (efface tout l'historique Git local)
+Remove-Item -Recurse -Force .git
+
 ## ÉTAPE 1 : Préparer votre dépôt GitHub
 
 ### 1a. Aller sur github.com et créer un compte si besoin
@@ -27,12 +30,16 @@ git init
 
 # Connecter à GitHub (remplacer par votre URL)
 git remote add origin https://github.com/VotreNom/bisou-sucre-paques.git
+ou avec le compte directement dans la demande
+git remote set-url origin https://atelierdubisousucre@github.com/atelierdubisousucre/bisou-sucre-paques.git
+#et pour vérifier
+git remote -v
 
 # Ajouter tous les fichiers
 git add .
 
 # Premier commit
-git commit -m "🐣 Initial commit - Application Joyeuses Pâques"
+git commit -m "Initial commit - Application Joyeuses Pâques"
 
 # Envoyer sur GitHub
 git branch -M main

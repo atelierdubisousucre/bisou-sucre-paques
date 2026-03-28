@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Joyeuses Pâques - Bisou Sucré",
+    "name": "Joyeuses Paques - Bisou Sucre",
     "slug": "bisou-sucre-paques",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -16,9 +16,9 @@
       "supportsTablet": false,
       "bundleIdentifier": "com.bisousucre.paques",
       "infoPlist": {
-        "NSCameraUsageDescription": "Nous avons besoin de votre caméra pour prendre des photos de Pâques avec notre cadre festif.",
-        "NSPhotoLibraryAddUsageDescription": "Nous sauvegardons vos photos de Pâques dans votre galerie.",
-        "NSPhotoLibraryUsageDescription": "Nous accédons à votre galerie pour sauvegarder vos photos de Pâques."
+        "NSCameraUsageDescription": "Camera pour photos de Paques.",
+        "NSPhotoLibraryAddUsageDescription": "Sauvegarder vos photos.",
+        "NSPhotoLibraryUsageDescription": "Acces galerie pour sauvegarder."
       }
     },
     "android": {
@@ -39,20 +39,12 @@
       "bundler": "metro"
     },
     "plugins": [
-      [
-        "expo-camera",
-        {
-          "cameraPermission": "Autorisez la caméra pour prendre vos photos de Pâques 📸"
-        }
-      ],
-      [
-        "expo-media-library",
-        {
-          "photosPermission": "Autorisez l'accès à votre galerie pour sauvegarder vos photos.",
-          "savePhotosPermission": "Autorisez la sauvegarde de photos dans votre galerie.",
-          "isAccessMediaLocationEnabled": true
-        }
-      ]
+      ["expo-camera", { "cameraPermission": "Camera pour photos de Paques" }],
+      ["expo-media-library", {
+        "photosPermission": "Acces photos.",
+        "savePhotosPermission": "Sauvegarder photos.",
+        "isAccessMediaLocationEnabled": true
+      }]
     ]
   }
 }

@@ -5,8 +5,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 
-import HomeScreen from './src/screens/HomeScreen';
-import PhotoScreen from './src/screens/PhotoScreen';
+import HomeScreen   from './src/screens/HomeScreen';
+import PhotoScreen  from './src/screens/PhotoScreen';
 import TaquinScreen from './src/screens/TaquinScreen';
 import { RootStackParamList } from './src/types/navigation';
 
@@ -21,29 +21,14 @@ export default function App() {
           screenOptions={{
             headerStyle: { backgroundColor: '#FFF0F5' },
             headerTintColor: '#C2185B',
-            headerTitleStyle: {
-              fontWeight: '800',
-              fontSize: 17,
-            },
+            headerTitleStyle: { fontWeight: '800', fontSize: 17 },
             contentStyle: { backgroundColor: '#FFF0F5' },
             animation: Platform.OS === 'ios' ? 'default' : 'slide_from_right',
           }}
         >
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Photo"
-            component={PhotoScreen}
-            options={{ title: '📸 Photo de Pâques' }}
-          />
-          <Stack.Screen
-            name="Taquin"
-            component={TaquinScreen}
-            options={{ title: '🧩 Taquin de Pâques' }}
-          />
+          <Stack.Screen name="Home"   component={HomeScreen}   options={{ headerShown: false }} />
+          <Stack.Screen name="Photo"  component={PhotoScreen}  options={{ title: 'Photo de Paques' }} />
+          <Stack.Screen name="Taquin" component={TaquinScreen} options={{ title: 'Jeu de Taquin' }} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

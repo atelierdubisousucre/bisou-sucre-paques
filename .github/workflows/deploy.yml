@@ -25,11 +25,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
       - name: 🔧 Install dependencies
         run: npm install --legacy-peer-deps
 
-      - name: 🌐 Export web build avec baseUrl GitHub Pages
+      - name: 🌐 Export web build
         run: npx expo export --platform web
         env:
           NODE_ENV: production

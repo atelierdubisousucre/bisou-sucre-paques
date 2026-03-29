@@ -8,61 +8,48 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { RootStackParamList } from '../types/navigation';
-import { ND } from '../utils/animated';
 
-type HomeNavProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
+type Nav = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 const { width: SW } = Dimensions.get('window');
-const LOGO_SIZE   = 150;
-const IS_WEB      = Platform.OS === 'web';
-const TITLE_FONT  = Platform.OS === 'ios' ? 'Georgia' : 'serif';
-const SCRIPT_FONT = Platform.OS === 'ios' ? 'Palatino' : 'serif';
+const ND     = Platform.OS !== 'web';
+const IS_WEB = Platform.OS === 'web';
+const MAX_W  = IS_WEB ? Math.min(SW, 500) : SW;
 
 export default function HomeScreen() {
-  const navigation = useNavigation<HomeNavProp>();
-  const logoAnim   = useRef(new Animated.Value(0)).current;
-  const titleAnim  = useRef(new Animated.Value(0)).current;
-  const btn1Anim   = useRef(new Animated.Value(0)).current;
-  const btn2Anim   = useRef(new Animated.Value(0)).current;
+  const navigation = useNavigation<Nav>();
+  const fadeAnim   = useRef(new Animated.Value(0)).current;
+  const slideAnim  = useRef(new Animated.Value(40)).current;
   const floatAnim  = useRef(new Animated.Value(0)).current;
-  const haloAnim   = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.stagger(180, [
-      Animated.spring(logoAnim,  { toValue:1, useNativeDriver:ND, tension:50, friction:7 }),
-      Animated.spring(titleAnim, { toValue:1, useNativeDriver:ND, tension:50, friction:7 }),
-      Animated.spring(btn1Anim,  { toValue:1, useNativeDriver:ND, tension:50, friction:7 }),
-      Animated.spring(btn2Anim,  { toValue:1, useNativeDriver:ND, tension:50, friction:7 }),
+    Animated.parallel([
+      Animated.timing(fadeAnim,  { toValue:1, duration:800, useNativeDriver:ND }),
+      Animated.timing(slideAnim, { toValue:0, duration:800, useNativeDriver:ND }),
     ]).start();
     Animated.loop(Animated.sequence([
-      Animated.timing(floatAnim, { toValue:1, duration:2200, useNativeDriver:ND }),
-      Animated.timing(floatAnim, { toValue:0, duration:2200, useNativeDriver:ND }),
-    ])).start();
-    Animated.loop(Animated.sequence([
-      Animated.timing(haloAnim, { toValue:1, duration:1500, useNativeDriver:ND }),
-      Animated.timing(haloAnim, { toValue:0, duration:1500, useNativeDriver:ND }),
+      Animated.timing(floatAnim, { toValue:1, duration:2000, useNativeDriver:ND }),
+      Animated.timing(floatAnim, { toValue:0, duration:2000, useNativeDriver:ND }),
     ])).start();
   }, []);
 
-  const floatY      = floatAnim.interpolate({ inputRange:[0,1], outputRange:[0,-12] });
-  const haloScale   = haloAnim.interpolate({ inputRange:[0,1], outputRange:[1.0,1.18] });
-  const haloOpacity = haloAnim.interpolate({ inputRange:[0,1], outputRange:[0.4,0.0] });
-  const maxW        = IS_WEB ? Math.min(SW, 500) : SW;
+  const floatY = floatAnim.interpolate({ inputRange:[0,1], outputRange:[0,-8] });
 
   return (
-    <LinearGradient colors={['#FFF5F8','#FFE8F0','#FFCFE3','#FFB8D4']} style={s.gradient}>
+    <LinearGradient colors={['#FFF5F8','#FFE4F0','#FFCFE3']} style={s.gradient}>
       <SafeAreaView style={s.safe}>
         <ScrollView
-          contentContainerStyle={[s.scroll, IS_WEB && { alignSelf:'center' as const, width: maxW }]}
+          contentContainerStyle={[s.scroll, { width: MAX_W, alignSelf:'center' as const }]}
           showsVerticalScrollIndicator={false}
         >
-          <View style={s.topBanner}>
-            <Text style={s.bannerText}>L'Atelier du Bisou Sucre</Text>
+          {/* Bandeau */}
+          <View style={s.banner}>
+            <Text style={s.bannerTxt}>L'Atelier du Bisou Sucre</Text>
           </View>
+
           <Text style={s.emojiRow}>🐣  🌸  🥚  🌸  🐣</Text>
 
-          {/* Logo */}
-          <Animated.View style={[s.logoOuter, { opacity:logoAnim, transform:[{translateY:floatY}] }]}>
-            <Animated.View style={[s.logoHalo, { transform:[{scale:haloScale}], opacity:haloOpacity }]}/>
+          {/* Logo flottant */}
+          <Animated.View style={[s.logoWrap, { opacity:fadeAnim, transform:[{translateY:floatY}] }]}>
             <View style={s.logoRing}>
               <View style={s.logoClip}>
                 <Image source={require('../../assets/logo_rond.png')} style={s.logoImg} resizeMode="cover"/>
@@ -71,69 +58,54 @@ export default function HomeScreen() {
           </Animated.View>
 
           {/* Titre */}
-          <Animated.View style={[s.titleBlock, {
-            opacity: titleAnim,
-            transform:[{ translateY: titleAnim.interpolate({ inputRange:[0,1], outputRange:[30,0] }) }],
-          }]}>
+          <Animated.View style={{ opacity:fadeAnim, transform:[{translateY:slideAnim}] }}>
             <LinearGradient colors={['#FF4081','#FF6B9D','#FF4081']}
               start={{x:0,y:0}} end={{x:1,y:0}} style={s.ribbon}>
-              <Text style={s.ribbonText}>🐰  Joyeuses Paques  🐰</Text>
+              <Text style={s.ribbonTxt}>🐰  Joyeuses Paques  🐰</Text>
             </LinearGradient>
-            <Text style={s.mainTitle}>Vivez la magie{'\n'}de Paques !</Text>
-            <Text style={s.subtitle}>avec L'Atelier du Bisou Sucre</Text>
+            <Text style={s.title}>Vivez la magie{'\n'}de Paques !</Text>
+            <Text style={s.subtitle}>avec L'Atelier du Bisou Sucre 💕</Text>
           </Animated.View>
 
           <View style={s.divider}>
-            <View style={s.dividerLine}/>
-            <Text style={s.dividerFleur}>🌸 🐇 🌸</Text>
-            <View style={s.dividerLine}/>
+            <View style={s.line}/>
+            <Text style={{ fontSize:18, marginHorizontal:10 }}>🌸 🐇 🌸</Text>
+            <View style={s.line}/>
           </View>
 
           {/* Carte Photo */}
-          <Animated.View style={[s.cardWrap, {
-            opacity: btn1Anim,
-            transform:[{ translateX: btn1Anim.interpolate({ inputRange:[0,1], outputRange:[-60,0] }) }],
-          }]}>
-            <TouchableOpacity onPress={() => navigation.navigate('Photo')} activeOpacity={0.88} style={s.card}>
-              <LinearGradient colors={['#FF6B9D','#E91E8C','#C2185B']}
-                start={{x:0,y:0}} end={{x:1,y:1}} style={s.cardGrad}>
-                <View style={s.emojiBubble}><Text style={s.cardEmoji}>📸</Text></View>
-                <View style={s.cardText}>
-                  <Text style={s.cardTitle}>Photo de Paques</Text>
-                  <Text style={s.cardDesc}>Immortalisez Paques avec notre cadre festif !</Text>
-                  <View style={s.cardChip}><Text style={s.cardChipText}>🎀 Cadre exclusif inclus</Text></View>
-                </View>
-                <Text style={s.cardArrow}>›</Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          </Animated.View>
+          <TouchableOpacity onPress={() => navigation.navigate('Photo')} activeOpacity={0.88} style={s.card}>
+            <LinearGradient colors={['#FF6B9D','#C2185B']} start={{x:0,y:0}} end={{x:1,y:1}} style={s.cardGrad}>
+              <View style={s.bubble}><Text style={s.cardEmoji}>📸</Text></View>
+              <View style={s.cardBody}>
+                <Text style={s.cardTitle}>Photo de Paques</Text>
+                <Text style={s.cardDesc}>Immortalisez Paques avec notre cadre festif !</Text>
+                <View style={s.chip}><Text style={s.chipTxt}>🎀 Cadre exclusif</Text></View>
+              </View>
+              <Text style={s.arrow}>›</Text>
+            </LinearGradient>
+          </TouchableOpacity>
 
           {/* Carte Taquin */}
-          <Animated.View style={[s.cardWrap, {
-            opacity: btn2Anim,
-            transform:[{ translateX: btn2Anim.interpolate({ inputRange:[0,1], outputRange:[60,0] }) }],
-          }]}>
-            <TouchableOpacity onPress={() => navigation.navigate('Taquin')} activeOpacity={0.88} style={s.card}>
-              <LinearGradient colors={['#FFB347','#FF8C00','#E65100']}
-                start={{x:0,y:0}} end={{x:1,y:1}} style={s.cardGrad}>
-                <View style={[s.emojiBubble,{backgroundColor:'rgba(255,255,255,0.2)'}]}>
-                  <Text style={s.cardEmoji}>🧩</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Taquin')} activeOpacity={0.88} style={s.card}>
+            <LinearGradient colors={['#FFB347','#E65100']} start={{x:0,y:0}} end={{x:1,y:1}} style={s.cardGrad}>
+              <View style={[s.bubble,{backgroundColor:'rgba(255,255,255,0.2)'}]}>
+                <Text style={s.cardEmoji}>🧩</Text>
+              </View>
+              <View style={s.cardBody}>
+                <Text style={s.cardTitle}>Jeu de Taquin</Text>
+                <Text style={s.cardDesc}>Reconstituez les images piece par piece !</Text>
+                <View style={[s.chip,{backgroundColor:'rgba(255,255,255,0.2)'}]}>
+                  <Text style={s.chipTxt}>🏆 3 niveaux</Text>
                 </View>
-                <View style={s.cardText}>
-                  <Text style={s.cardTitle}>Jeu de Taquin</Text>
-                  <Text style={s.cardDesc}>Reconstituez les images de Paques piece par piece !</Text>
-                  <View style={[s.cardChip,{backgroundColor:'rgba(255,255,255,0.22)'}]}>
-                    <Text style={s.cardChipText}>🏆 3 niveaux de difficulte</Text>
-                  </View>
-                </View>
-                <Text style={s.cardArrow}>›</Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          </Animated.View>
+              </View>
+              <Text style={s.arrow}>›</Text>
+            </LinearGradient>
+          </TouchableOpacity>
 
           <View style={s.footer}>
-            <Text style={s.footerEmoji}>🌼  🐥  🌷  🐥  🌼</Text>
-            <Text style={s.footerText}>Fait avec amour par L'Atelier du Bisou Sucre</Text>
+            <Text style={{ fontSize:20, letterSpacing:5, marginBottom:8 }}>🌼 🐥 🌷 🐥 🌼</Text>
+            <Text style={s.footerTxt}>Fait avec amour par L'Atelier du Bisou Sucre</Text>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -142,37 +114,32 @@ export default function HomeScreen() {
 }
 
 const s = StyleSheet.create({
-  gradient:{ flex:1 },
-  safe:{ flex:1 },
-  scroll:{ alignItems:'center', paddingHorizontal:20, paddingBottom:40 },
-  topBanner:{ width:'120%', backgroundColor:'#FF4081', paddingVertical:10, alignItems:'center', marginBottom:18 },
-  bannerText:{ color:'#fff', fontSize:13, fontWeight:'700', letterSpacing:2, fontFamily:SCRIPT_FONT },
-  emojiRow:{ fontSize:24, letterSpacing:6, marginBottom:22 },
-  logoOuter:{ alignItems:'center', justifyContent:'center', marginBottom:26 },
-  logoHalo:{ position:'absolute', width:LOGO_SIZE+44, height:LOGO_SIZE+44, borderRadius:(LOGO_SIZE+44)/2, backgroundColor:'#FF6B9D' },
-  logoRing:{ width:LOGO_SIZE+14, height:LOGO_SIZE+14, borderRadius:(LOGO_SIZE+14)/2, backgroundColor:'#fff', alignItems:'center', justifyContent:'center' },
-  logoClip:{ width:LOGO_SIZE, height:LOGO_SIZE, borderRadius:LOGO_SIZE/2, overflow:'hidden' },
-  logoImg:{ width:LOGO_SIZE, height:LOGO_SIZE },
-  titleBlock:{ alignItems:'center', width:'100%', marginBottom:8 },
-  ribbon:{ width:'100%', paddingVertical:10, paddingHorizontal:20, alignItems:'center', borderRadius:6, marginBottom:16 },
-  ribbonText:{ color:'#fff', fontSize:15, fontWeight:'800', letterSpacing:2, fontFamily:SCRIPT_FONT },
-  mainTitle:{ fontSize:42, fontWeight:'900', color:'#C2185B', textAlign:'center', fontFamily:TITLE_FONT, lineHeight:50, marginBottom:8 },
-  subtitle:{ fontSize:15, color:'#AD1457', textAlign:'center', fontFamily:SCRIPT_FONT, fontStyle:'italic' },
-  divider:{ flexDirection:'row', alignItems:'center', width:'90%', marginVertical:22 },
-  dividerLine:{ flex:1, height:1.5, backgroundColor:'rgba(194,24,91,0.2)', borderRadius:1 },
-  dividerFleur:{ fontSize:18, marginHorizontal:10 },
-  cardWrap:{ width:'100%', marginBottom:16, borderRadius:24 },
-  card:{ borderRadius:24, overflow:'hidden' },
-  cardGrad:{ flexDirection:'row', alignItems:'center', padding:18, paddingRight:14, minHeight:100, overflow:'hidden' },
-  emojiBubble:{ width:62, height:62, borderRadius:31, backgroundColor:'rgba(255,255,255,0.25)', justifyContent:'center', alignItems:'center', marginRight:16 },
-  cardEmoji:{ fontSize:34 },
-  cardText:{ flex:1 },
-  cardTitle:{ fontSize:20, fontWeight:'900', color:'#fff', marginBottom:4, fontFamily:TITLE_FONT },
-  cardDesc:{ fontSize:12, color:'rgba(255,255,255,0.9)', lineHeight:17, marginBottom:8 },
-  cardChip:{ alignSelf:'flex-start', backgroundColor:'rgba(255,255,255,0.25)', paddingHorizontal:10, paddingVertical:3, borderRadius:20 },
-  cardChipText:{ color:'#fff', fontSize:11, fontWeight:'700' },
-  cardArrow:{ fontSize:34, color:'rgba(255,255,255,0.65)', marginLeft:6 },
-  footer:{ alignItems:'center', marginTop:12 },
-  footerEmoji:{ fontSize:20, letterSpacing:5, marginBottom:8 },
-  footerText:{ fontSize:12, color:'#AD1457', fontStyle:'italic', fontFamily:SCRIPT_FONT, opacity:0.7 },
+  gradient: { flex:1 },
+  safe: { flex:1 },
+  scroll: { alignItems:'center', paddingHorizontal:20, paddingBottom:40 },
+  banner: { width:'120%', backgroundColor:'#FF4081', paddingVertical:10, alignItems:'center', marginBottom:20 },
+  bannerTxt: { color:'#fff', fontSize:13, fontWeight:'700', letterSpacing:2 },
+  emojiRow: { fontSize:22, letterSpacing:6, marginBottom:20 },
+  logoWrap: { alignItems:'center', marginBottom:24 },
+  logoRing: { width:164, height:164, borderRadius:82, backgroundColor:'#fff', alignItems:'center', justifyContent:'center' },
+  logoClip: { width:150, height:150, borderRadius:75, overflow:'hidden' },
+  logoImg: { width:150, height:150 },
+  ribbon: { width:'100%', paddingVertical:10, alignItems:'center', borderRadius:6, marginBottom:14 },
+  ribbonTxt: { color:'#fff', fontSize:15, fontWeight:'800', letterSpacing:2 },
+  title: { fontSize:40, fontWeight:'900', color:'#C2185B', textAlign:'center', lineHeight:48, marginBottom:8 },
+  subtitle: { fontSize:14, color:'#AD1457', textAlign:'center', fontStyle:'italic', marginBottom:4 },
+  divider: { flexDirection:'row', alignItems:'center', width:'90%', marginVertical:20 },
+  line: { flex:1, height:1.5, backgroundColor:'rgba(194,24,91,0.2)' },
+  card: { width:'100%', borderRadius:22, overflow:'hidden', marginBottom:16 },
+  cardGrad: { flexDirection:'row', alignItems:'center', padding:18, minHeight:96 },
+  bubble: { width:60, height:60, borderRadius:30, backgroundColor:'rgba(255,255,255,0.25)', justifyContent:'center', alignItems:'center', marginRight:16 },
+  cardEmoji: { fontSize:32 },
+  cardBody: { flex:1 },
+  cardTitle: { fontSize:19, fontWeight:'900', color:'#fff', marginBottom:4 },
+  cardDesc: { fontSize:12, color:'rgba(255,255,255,0.9)', lineHeight:17, marginBottom:8 },
+  chip: { alignSelf:'flex-start', backgroundColor:'rgba(255,255,255,0.25)', paddingHorizontal:10, paddingVertical:3, borderRadius:20 },
+  chipTxt: { color:'#fff', fontSize:11, fontWeight:'700' },
+  arrow: { fontSize:32, color:'rgba(255,255,255,0.6)', marginLeft:6 },
+  footer: { alignItems:'center', marginTop:14 },
+  footerTxt: { fontSize:12, color:'#AD1457', fontStyle:'italic', opacity:0.7 },
 });

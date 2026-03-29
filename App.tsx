@@ -4,9 +4,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-
-import HomeScreen   from './src/screens/HomeScreen';
-import PhotoScreen  from './src/screens/PhotoScreen';
+import HomeScreen from './src/screens/HomeScreen';
+import PhotoScreen from './src/screens/PhotoScreen';
 import TaquinScreen from './src/screens/TaquinScreen';
 import { RootStackParamList } from './src/types/navigation';
 
@@ -21,7 +20,7 @@ export default function App() {
           screenOptions={{
             headerStyle: { backgroundColor: '#FFF0F5' },
             headerTintColor: '#C2185B',
-            headerTitleStyle: { fontWeight: '800', fontSize: 17 },
+            headerTitleStyle: { fontWeight: '800' },
             contentStyle: { backgroundColor: '#FFF0F5' },
             animation: Platform.OS === 'ios' ? 'default' : 'slide_from_right',
           }}

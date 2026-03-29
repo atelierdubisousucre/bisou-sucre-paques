@@ -1,7 +1,3 @@
-export function generateSolvedTiles(n: number): number[] {
-  return Array.from({ length: n * n }, (_, i) => i);
-}
-
 export function isSolved(tiles: number[]): boolean {
   for (let i = 0; i < tiles.length; i++) {
     if (tiles[i] !== i) return false;
@@ -10,7 +6,7 @@ export function isSolved(tiles: number[]): boolean {
 }
 
 export function shuffleFromSolved(n: number, moves: number = 300): number[] {
-  const tiles = generateSolvedTiles(n);
+  const tiles = Array.from({ length: n * n }, (_, i) => i);
   let emptyPos = n * n - 1;
   for (let i = 0; i < moves; i++) {
     const row = Math.floor(emptyPos / n);
@@ -27,14 +23,13 @@ export function shuffleFromSolved(n: number, moves: number = 300): number[] {
   return tiles;
 }
 
-export function applyMove(tiles: number[], tilePos: number, n: number): number[] | null {
-  const emptyPos = tiles.indexOf(tiles.length - 1);
-  const rowA = Math.floor(tilePos / n), colA = tilePos % n;
-  const rowB = Math.floor(emptyPos / n), colB = emptyPos % n;
-  const adjacent = (Math.abs(rowA - rowB) === 1 && colA === colB) ||
-                   (Math.abs(colA - colB) === 1 && rowA === rowB);
-  if (!adjacent) return null;
-  const newTiles = [...tiles];
-  [newTiles[emptyPos], newTiles[tilePos]] = [newTiles[tilePos], newTiles[emptyPos]];
-  return newTiles;
+export function applyMove(tiles: number[], pos: number, n: number): number[] | null {
+  const ePos = tiles.indexOf(n * n - 1);
+  const r = Math.floor(pos / n), c = pos % n;
+  const er = Math.floor(ePos / n), ec = ePos % n;
+  const ok = (Math.abs(r - er) === 1 && c === ec) || (Math.abs(c - ec) === 1 && r === er);
+  if (!ok) return null;
+  const next = [...tiles];
+  [next[ePos], next[pos]] = [next[pos], next[ePos]];
+  return next;
 }

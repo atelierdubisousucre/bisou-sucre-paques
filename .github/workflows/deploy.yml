@@ -24,7 +24,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 20
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -32,17 +32,23 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Export web build
+      - name: Inject baseUrl for GitHub Pages
+        run: |
+          node -e "
+          const fs = require('fs');
+          const cfg = JSON.parse(fs.readFileSync('app.json','utf8'));
+          cfg.expo.web.baseUrl = '/bisou-sucre-paques';
+          fs.writeFileSync('app.json', JSON.stringify(cfg, null, 2));
+          console.log('baseUrl injected:', cfg.expo.web.baseUrl);
+          "
+
+      - name: Export web
         run: npx expo export --platform web
-        env:
-          NODE_ENV: production
-          GITHUB_PAGES: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
 
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - name: Deploy
         uses: actions/deploy-pages@v4

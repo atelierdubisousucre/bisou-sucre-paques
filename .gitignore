@@ -3,8 +3,4 @@ node_modules/
 dist/
 web-build/
 .DS_Store
-*.pem
-npm-debug.log*
-.env
-.env.local
 expo-env.d.ts

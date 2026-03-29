@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Joyeuses Paques - Bisou Sucre",
+    "name": "Joyeuses Paques Bisou Sucre",
     "slug": "bisou-sucre-paques",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -18,7 +18,7 @@
       "infoPlist": {
         "NSCameraUsageDescription": "Camera pour photos de Paques.",
         "NSPhotoLibraryAddUsageDescription": "Sauvegarder vos photos.",
-        "NSPhotoLibraryUsageDescription": "Acces galerie pour sauvegarder."
+        "NSPhotoLibraryUsageDescription": "Acces galerie."
       }
     },
     "android": {

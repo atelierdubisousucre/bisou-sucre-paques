@@ -33,16 +33,12 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Inject baseUrl for GitHub Pages
-        run: |
-          node -e "
-          const fs = require('fs');
-          const cfg = JSON.parse(fs.readFileSync('app.json','utf8'));
-          cfg.expo.web.baseUrl = '/bisou-sucre-paques';
-          fs.writeFileSync('app.json', JSON.stringify(cfg, null, 2));
-          console.log('baseUrl injected:', cfg.expo.web.baseUrl);
-          "
+        run: node scripts/inject-base-url.js
 
-      - name: Export web
+      - name: Verify baseUrl injected
+        run: node -e "const c=require('./app.json');console.log('baseUrl:',c.expo.web.baseUrl)"
+
+      - name: Export web build
         run: npx expo export --platform web
 
       - name: Upload artifact

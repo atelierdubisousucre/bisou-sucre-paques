@@ -20,31 +20,44 @@ env:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '20'
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Inject baseUrl for GitHub Pages
+      - name: Inject baseUrl
         run: node scripts/inject-base-url.js
 
-      - name: Verify baseUrl injected
-        run: node -e "const c=require('./app.json');console.log('baseUrl:',c.expo.web.baseUrl)"
+      - name: Show app.json web config
+        run: |
+          echo "=== app.json web section ==="
+          node -e "const c=require('./app.json'); console.log(JSON.stringify(c.expo.web, null, 2))"
 
-      - name: Export web build
+      - name: Build web
         run: npx expo export --platform web
 
-      - name: Upload artifact
+      - name: List dist folder
+        run: |
+          echo "=== dist folder contents ==="
+          ls -la dist/
+          echo "=== dist/index.html ==="
+          head -5 dist/index.html || echo "No index.html found"
+
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: dist
 
-      - name: Deploy
+      - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
